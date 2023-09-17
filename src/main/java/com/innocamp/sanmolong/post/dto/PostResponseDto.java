@@ -1,10 +1,12 @@
 package com.innocamp.sanmolong.post.dto;
 
+import com.innocamp.sanmolong.comment.dto.CommentResponseDto;
 import com.innocamp.sanmolong.post.entity.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -17,6 +19,7 @@ public class PostResponseDto {
     private LocalDate mountDate;
     private boolean completed;
     private String author;
+    private List<CommentResponseDto> comments;
 
     public PostResponseDto(Post post) {
         this.postId = post.getId();
@@ -27,5 +30,9 @@ public class PostResponseDto {
         this.mountDate = post.getMountDate();
         this.completed = post.getCompleted();
         this.author = post.getUser().getNickname();
+        this.comments = post.getComments()
+                .stream()
+                .map(CommentResponseDto::new)
+                .toList();
     }
 }
