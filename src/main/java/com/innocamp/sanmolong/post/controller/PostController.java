@@ -38,4 +38,11 @@ public class PostController {
                                                       @RequestBody PostRequestDto requestDto) {
         return postService.updatePost(id, requestDto);
     }
+
+    // 선택한 게시글 삭제
+    @DeleteMapping("/posts/{id}")
+    public ResponseEntity<?> deletePost(@PathVariable Long id,
+                                        @RequestBody PostRequestDto requestDto) {
+        return postService.deletePost(id, requestDto);
+    }
 }
