@@ -1,6 +1,5 @@
 package com.innocamp.sanmolong.mountain.entity;
 
-import com.innocamp.sanmolong.badge.entity.Badge;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -34,7 +33,4 @@ public class Mountain {
 
     @Column(nullable = false)
     private String departAd;
-
-    @OneToOne(mappedBy = "mountain_id")
-    private Badge badge;
 }
