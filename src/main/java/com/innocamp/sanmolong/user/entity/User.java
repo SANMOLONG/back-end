@@ -4,11 +4,13 @@ import com.innocamp.sanmolong.badge.entity.Badge;
 import com.innocamp.sanmolong.post.entity.Post;
 import com.innocamp.sanmolong.together.entity.Together;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

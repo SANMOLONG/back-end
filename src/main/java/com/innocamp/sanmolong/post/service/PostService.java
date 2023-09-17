@@ -3,6 +3,7 @@ package com.innocamp.sanmolong.post.service;
 import com.innocamp.sanmolong.mountain.entity.Mountain;
 import com.innocamp.sanmolong.mountain.service.MountainService;
 import com.innocamp.sanmolong.post.dto.PostRequestDto;
+import com.innocamp.sanmolong.post.dto.PostResponseDto;
 import com.innocamp.sanmolong.post.dto.TotalPostResponseDto;
 import com.innocamp.sanmolong.post.entity.Post;
 import com.innocamp.sanmolong.post.repository.PostRepository;
@@ -36,4 +37,12 @@ public class PostService {
         return new TotalPostResponseDto(posts);
     }
 
+    public PostResponseDto getPost(Long id) {
+        return new PostResponseDto(findPost(id));
+    }
+
+    public Post findPost(Long id) {
+        return postRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("선택한 게시글은 존재하지 않습니다."));
+    }
 }
