@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,6 +40,19 @@ public class PostService {
 
     public PostResponseDto getPost(Long id) {
         return new PostResponseDto(findPost(id));
+    }
+
+    @Transactional
+    public ResponseEntity<PostResponseDto> updatePost(Long id, PostRequestDto requestDto) {
+        Post post = findPost(id);
+
+        if (!post.getUser().getNickname().equals(requestDto.getNickname())) {
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
+        }
+
+        post.update(requestDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new PostResponseDto(post));
     }
 
     public Post findPost(Long id) {

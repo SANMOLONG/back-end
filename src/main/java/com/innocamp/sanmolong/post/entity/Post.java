@@ -59,4 +59,10 @@ public class Post {
         this.comments = new ArrayList<>();
         this.togethers = new ArrayList<>();
     }
+
+    public void update(PostRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.mountDate = requestDto.getMountDate();
+    }
 }
