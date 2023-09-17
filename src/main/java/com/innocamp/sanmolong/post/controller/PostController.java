@@ -1,13 +1,11 @@
 package com.innocamp.sanmolong.post.controller;
 
 import com.innocamp.sanmolong.post.dto.PostRequestDto;
+import com.innocamp.sanmolong.post.dto.TotalPostResponseDto;
 import com.innocamp.sanmolong.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -20,5 +18,12 @@ public class PostController {
     public ResponseEntity<?> createPost(@RequestBody PostRequestDto requestDto) {
         return postService.createPost(requestDto);
     }
+
+    // 전체 게시글 조회
+    @GetMapping("/posts")
+    public TotalPostResponseDto getPosts(@RequestParam String mount, @RequestParam String course) {
+        return postService.getPosts(mount, course);
+    }
+
 
 }
