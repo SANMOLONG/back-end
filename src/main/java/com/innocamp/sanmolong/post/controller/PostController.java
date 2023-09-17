@@ -46,6 +46,7 @@ public class PostController {
         return postService.deletePost(id, requestDto);
     }
 
+    // 게시글 완료하기
     @PutMapping("/{id}/completed")
     public ResponseEntity<PostResponseDto> completePost(@PathVariable Long id,
                                           @RequestBody PostRequestDto requestDto) {
