@@ -1,6 +1,7 @@
 package com.innocamp.sanmolong.comment.service;
 
 import com.innocamp.sanmolong.comment.dto.CommentRequestDto;
+import com.innocamp.sanmolong.comment.dto.CommentResponseDto;
 import com.innocamp.sanmolong.comment.entity.Comment;
 import com.innocamp.sanmolong.comment.repository.CommentRepository;
 import com.innocamp.sanmolong.post.entity.Post;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +31,23 @@ public class CommentService {
         commentRepository.save(comment);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("댓글 생성 성공");
+    }
+
+    @Transactional
+    public ResponseEntity<CommentResponseDto> updateComment(Long id, CommentRequestDto requestDto) {
+        Comment comment = findComment(id);
+
+        if(!comment.getUser().getNickname().equals(requestDto.getNickname())) {
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
+        }
+
+        comment.update(requestDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new CommentResponseDto(comment));
+    }
+
+    private Comment findComment(Long id) {
+        return commentRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("선택한 댓글은 존재하지 않습니다."));
     }
 }
