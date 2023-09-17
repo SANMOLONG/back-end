@@ -66,6 +66,18 @@ public class PostService {
         return ResponseEntity.status(HttpStatus.OK).body("게시글 삭제 성공");
     }
 
+    @Transactional
+    public ResponseEntity<PostResponseDto> completePost(Long id, PostRequestDto requestDto) {
+        Post post = findPost(id);
+
+        if (!post.getUser().getNickname().equals(requestDto.getNickname())) {
+            throw new IllegalArgumentException("작성자만 완료할 수 있습니다.");
+        }
+        post.complete();
+
+        return ResponseEntity.status(HttpStatus.OK).body(new PostResponseDto(post));
+    }
+
     public Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 게시글은 존재하지 않습니다."));

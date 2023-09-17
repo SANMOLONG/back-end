@@ -45,4 +45,10 @@ public class PostController {
                                         @RequestBody PostRequestDto requestDto) {
         return postService.deletePost(id, requestDto);
     }
+
+    @PutMapping("/{id}/completed")
+    public ResponseEntity<PostResponseDto> completePost(@PathVariable Long id,
+                                          @RequestBody PostRequestDto requestDto) {
+        return postService.completePost(id, requestDto);
+    }
 }
