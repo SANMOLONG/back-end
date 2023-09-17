@@ -46,6 +46,17 @@ public class CommentService {
         return ResponseEntity.status(HttpStatus.OK).body(new CommentResponseDto(comment));
     }
 
+    public ResponseEntity<?> deleteComment(Long id, CommentRequestDto requestDto) {
+        Comment comment = findComment(id);
+
+        if(!comment.getUser().getNickname().equals(requestDto.getNickname())) {
+            throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
+        }
+        commentRepository.delete(comment);
+
+        return ResponseEntity.status(HttpStatus.OK).body("댓글 삭제 성공");
+    }
+
     private Comment findComment(Long id) {
         return commentRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 댓글은 존재하지 않습니다."));
