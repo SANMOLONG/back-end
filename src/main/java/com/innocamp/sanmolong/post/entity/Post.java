@@ -65,4 +65,8 @@ public class Post {
         this.content = requestDto.getContent();
         this.mountDate = requestDto.getMountDate();
     }
+
+    public void complete() {
+        this.completed = !this.completed;
+    }
 }
