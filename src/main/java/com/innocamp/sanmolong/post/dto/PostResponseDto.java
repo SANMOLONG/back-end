@@ -20,6 +20,7 @@ public class PostResponseDto {
     private boolean completed;
     private String author;
     private List<CommentResponseDto> comments;
+    private List<String> togethers;
 
     public PostResponseDto(Post post) {
         this.postId = post.getId();
@@ -33,6 +34,10 @@ public class PostResponseDto {
         this.comments = post.getComments()
                 .stream()
                 .map(CommentResponseDto::new)
+                .toList();
+        this.togethers = post.getTogethers()
+                .stream()
+                .map(together -> together.getUser().getNickname())
                 .toList();
     }
 }
