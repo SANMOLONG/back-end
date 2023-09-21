@@ -29,6 +29,12 @@ public class Mountain {
     private String courseImg;
 
     @Column(nullable = false)
+    private String coursePic;
+
+    @Column(nullable = false)
+    private String courseDetail;
+
+    @Column(nullable = false)
     private String departNm;
 
     @Column(nullable = false)
