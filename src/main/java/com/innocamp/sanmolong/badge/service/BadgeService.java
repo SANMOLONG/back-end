@@ -1,9 +1,6 @@
 package com.innocamp.sanmolong.badge.service;
 
-import com.innocamp.sanmolong.badge.dto.BadgeCountResponseDto;
-import com.innocamp.sanmolong.badge.dto.BadgeMountainRequestDto;
-import com.innocamp.sanmolong.badge.dto.BadgeRequestDto;
-import com.innocamp.sanmolong.badge.dto.BadgeResponseDto;
+import com.innocamp.sanmolong.badge.dto.*;
 import com.innocamp.sanmolong.badge.entity.Badge;
 import com.innocamp.sanmolong.badge.repository.BadgeRepository;
 import com.innocamp.sanmolong.mountain.entity.Mountain;
@@ -19,7 +16,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -133,6 +132,22 @@ public class BadgeService {
         }
     }
 
+    public List<SliderBadgeDto> getSliderBadgeInfo(String nickname) {
+        List<SliderBadgeDto> badgeDtoList = new ArrayList<>();
+        List<String> mounts = Arrays.asList("설악산", "오대산", "치악산", "태백산");
+        for (String mount: mounts) {
+            long count = badgeRepository.countByUser_NicknameAndMountain_MountainAndCheckBadgeTrue(nickname, mount);
+            Optional<Badge> lastBadge = badgeRepository.findFirstByUser_NicknameAndMountain_MountainAndCheckBadgeTrueOrderByGetDateDesc(nickname, mount);
+            String lastDate = "";
+            if (lastBadge.isPresent()) {
+                lastDate = lastBadge.get().getGetDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            }
+
+            badgeDtoList.add(new SliderBadgeDto(mount, count, lastDate));
+        }
+        return badgeDtoList;
+    }
+
     /**
      * 두 지점간의 거리 계산
      *
@@ -161,13 +176,13 @@ public class BadgeService {
         return (dist);
     }
 
-
     // This function converts decimal degrees to radians
+
     private static double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
     }
-
     // This function converts radians to decimal degrees
+
     private static double rad2deg(double rad) {
         return (rad * 180 / Math.PI);
     }
