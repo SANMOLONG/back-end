@@ -27,7 +27,7 @@ public class Badge{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "mountain_id")
     private Mountain mountain;
 }
