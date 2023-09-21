@@ -12,4 +12,5 @@ import lombok.Setter;
 public class BadgeCountResponseDto {
     private String mountain;
     private int count;
+    private String latelyDate;
 }

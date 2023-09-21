@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,10 +74,10 @@ public class BadgeService {
         List<Mountain> mountains = mountainRepository.findAll();
 
         List<BadgeCountResponseDto> countList = new ArrayList<>();
-        countList.add(new BadgeCountResponseDto("설악산", 0));
-        countList.add(new BadgeCountResponseDto("치악산", 0));
-        countList.add(new BadgeCountResponseDto("오대산", 0));
-        countList.add(new BadgeCountResponseDto("태백산", 0));
+        countList.add(new BadgeCountResponseDto("설악산", 0, null));
+        countList.add(new BadgeCountResponseDto("치악산", 0, null));
+        countList.add(new BadgeCountResponseDto("오대산", 0, null));
+        countList.add(new BadgeCountResponseDto("태백산", 0, null));
 
         for(int i = 0; i < mountains.size(); i++) {
             Mountain mountain = mountains.get(i);
@@ -88,11 +89,33 @@ public class BadgeService {
                     }
                 }
             }
-
         }
+        for(int i = 0; i < countList.size(); i++){
+            String latelyDate = getLatelyDate(nickname, countList.get(i).getMountain());
+            countList.get(i).setLatelyDate(latelyDate);
+        }
+
         return countList;
     }
 
+    // 유저별 산별 가장 최근 날짜 가져오기
+    public String getLatelyDate(String nickname, String mountainNM){
+        User user = userService.findUser(nickname);
+        List<Mountain> mountains = mountainRepository.findAllByMountain(mountainNM);
+
+        LocalDateTime initDate = badgeRepository.findByUserAndMountain(user, mountains.get(0)).getGetDate();
+        for(int i = 1; i < mountains.size(); i++) {
+            Mountain mountain = mountains.get(i);
+            Badge badge = badgeRepository.findByUserAndMountain(user, mountain);
+            if(badge.getGetDate().isAfter(initDate)){
+                initDate = badge.getGetDate();
+            }
+        }
+
+        String latelyDate = initDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        return latelyDate;
+    }
     @Transactional
     public boolean createBadge(BadgeRequestDto requestDto) {
         User user = userService.findUser(requestDto.getNickname());
