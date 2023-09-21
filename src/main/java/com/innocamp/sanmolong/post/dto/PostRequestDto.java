@@ -12,4 +12,5 @@ public class PostRequestDto {
     private String mountain;
     private String course;
     private LocalDate mountDate;
+    private int headCount;
 }

@@ -29,6 +29,9 @@ public class Post {
     private String content;
 
     @Column(nullable = false)
+    private int headCount;
+
+    @Column(nullable = false)
     private Boolean completed;
 
     @Column(nullable = false)
@@ -54,6 +57,7 @@ public class Post {
         this.content = requestDto.getContent();
         this.completed = false;
         this.mountDate = requestDto.getMountDate();
+        this.headCount = requestDto.getHeadCount();
         this.user = user;
         this.mountain = mountain;
         this.comments = new ArrayList<>();

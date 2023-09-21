@@ -39,7 +39,8 @@ public class PostService {
     }
 
     public PostResponseDto getPost(Long id) {
-        return new PostResponseDto(findPost(id));
+        Post post = findPost(id);
+        return new PostResponseDto(post);
     }
 
     @Transactional
@@ -52,7 +53,15 @@ public class PostService {
 
         post.update(requestDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new PostResponseDto(post));
+        PostResponseDto responseDto = PostResponseDto
+                .builder()
+                .postId(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .mountDate(post.getMountDate())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     public ResponseEntity<?> deletePost(Long id, PostRequestDto requestDto) {
@@ -75,7 +84,12 @@ public class PostService {
         }
         post.complete();
 
-        return ResponseEntity.status(HttpStatus.OK).body(new PostResponseDto(post));
+        PostResponseDto responseDto = PostResponseDto
+                .builder()
+                .postId(post.getId())
+                .completed(post.getCompleted())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     public Post findPost(Long id) {

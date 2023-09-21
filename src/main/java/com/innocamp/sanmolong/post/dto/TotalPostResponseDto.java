@@ -10,34 +10,27 @@ import java.util.List;
 
 @Getter
 public class TotalPostResponseDto {
-    private List<PostDto> uncompleted = new ArrayList<>();
-    private List<PostDto> completed = new ArrayList<>();
+    private List<PostResponseDto> uncompleted = new ArrayList<>();
+    private List<PostResponseDto> completed = new ArrayList<>();
 
     public TotalPostResponseDto(List<Post> posts) {
         posts.forEach(post -> {
+            PostResponseDto responseDto = PostResponseDto
+                    .builder()
+                    .postId(post.getId())
+                    .title(post.getTitle())
+                    .mountain(post.getMountain().getMountain())
+                    .course(post.getMountain().getCourse())
+                    .level(post.getMountain().getCourseLevel())
+                    .mountDate(post.getMountDate())
+                    .togetherCount(post.getTogethers().size())
+                    .headCount(post.getHeadCount())
+                    .build();
             if (post.getCompleted()) {
-                completed.add(new PostDto(post));
+                completed.add(responseDto);
             } else {
-                uncompleted.add(new PostDto(post));
+                uncompleted.add(responseDto);
             }
         });
-    }
-
-    @Getter
-    @NoArgsConstructor
-    static class PostDto {
-        private String title;
-        private String course;
-        private String level;
-        private LocalDate mountDate;
-        private int count;
-
-        public PostDto(Post post) {
-            this.title = post.getTitle();
-            this.course = post.getMountain().getCourse();
-            this.level = post.getMountain().getCourseLevel();
-            this.mountDate = post.getMountDate();
-            this.count = post.getTogethers().size();
-        }
     }
 }

@@ -27,4 +27,8 @@ public class MountainController {
         return mountainService.getCourseInfo(course);
     }
 
+    @GetMapping("/courseInfoForPost")
+    public CourseResponseDto getCourseInfoForPost(@RequestParam String course) {
+        return mountainService.getCourseInfoForPost(course);
+    }
 }
