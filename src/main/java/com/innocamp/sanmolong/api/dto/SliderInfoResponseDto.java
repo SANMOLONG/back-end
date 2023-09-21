@@ -12,5 +12,5 @@ public class SliderInfoResponseDto {
     List<WeatherDto> weathers;
     List<FireDto> fires;
     List<Badge> badges;
-    int plogging;
+    long plogging;
 }
