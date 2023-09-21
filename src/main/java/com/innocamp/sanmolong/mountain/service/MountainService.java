@@ -48,9 +48,24 @@ public class MountainService {
         return responseDto;
     }
 
+    public CourseResponseDto getCourseInfoForPost(String course) {
+        Mountain c = mountainRepository.findByCourse(course);
+
+        CourseResponseDto responseDto = CourseResponseDto.builder()
+                .mountain(c.getMountain())
+                .course(c.getCourse())
+                .level(c.getCourseLevel())
+                .spendTime(c.getSpendTime())
+                .departNM(c.getDepartNm())
+                .departAD(c.getDepartAd())
+                .courseDetail(c.getCourseDetail())
+                .build();
+
+        return responseDto;
+    }
+
     public Mountain findMountain(String mountain, String course) {
         return mountainRepository.findByMountainAndCourse(mountain, course)
                 .orElseThrow(() -> new IllegalArgumentException("해당 산에 대한 코스가 존재하지 않습니다."));
     }
-
 }
