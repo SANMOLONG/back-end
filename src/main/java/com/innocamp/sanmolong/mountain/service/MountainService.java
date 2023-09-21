@@ -16,7 +16,7 @@ public class MountainService {
     private final MountainRepository mountainRepository;
 
     public List<MountainResponseDto> getMountInfo(String mountain) {
-        List<Mountain> mountains = mountainRepository.findAllByMountain(mountain);
+        List<Mountain> mountains = mountainRepository.findDistinctAllByMountain(mountain);
         List<MountainResponseDto> responseDtoList = new ArrayList<>();
         mountains.forEach(m -> {
             MountainResponseDto responseDto = new MountainResponseDto(

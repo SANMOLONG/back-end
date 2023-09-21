@@ -52,7 +52,7 @@ public class BadgeService {
         String mountainNM = requestDto.getMountain();
 
         User user = userService.findUser(nickname);
-        List<Mountain> mountains = mountainRepository.findAllByMountain(mountainNM);
+        List<Mountain> mountains = mountainRepository.findDistinctAllByMountain(mountainNM);
 
         List<BadgeResponseDto> badges = new ArrayList<>();
         for(int i = 0; i < mountains.size(); i++) {

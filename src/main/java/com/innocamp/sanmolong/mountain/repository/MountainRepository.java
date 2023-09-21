@@ -12,8 +12,10 @@ public interface MountainRepository extends JpaRepository<Mountain, Long> {
 
     Optional<Mountain> findByMountainAndCourseAndDepartNm(String mountain, String course, String departNm);
 
-    @Query("select m from Mountain m where m.mountain = ?1 group by m.course")
     List<Mountain> findAllByMountain(String mountain);
+
+    @Query("select m from Mountain m where m.mountain = ?1 group by m.course")
+    List<Mountain> findDistinctAllByMountain(String mountain);
 
     @Query("select m from Mountain m where m.course = ?1 group by m.course")
     Mountain findByCourse(String course);
