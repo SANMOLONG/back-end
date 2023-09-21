@@ -16,7 +16,7 @@ public class MountainService {
     private final MountainRepository mountainRepository;
 
     public List<MountainResponseDto> getMountInfo(String mountain) {
-        List<Mountain> mountains = mountainRepository.findAllByMountain(mountain);
+        List<Mountain> mountains = mountainRepository.findDistinctAllByMountain(mountain);
         List<MountainResponseDto> responseDtoList = new ArrayList<>();
         mountains.forEach(m -> {
             MountainResponseDto responseDto = new MountainResponseDto(
@@ -64,8 +64,14 @@ public class MountainService {
         return responseDto;
     }
 
+    public Mountain findMountainStart(String mountain, String course, String departNm) {
+        return mountainRepository.findByMountainAndCourseAndDepartNm(mountain, course, departNm)
+                .orElseThrow(() -> new IllegalArgumentException("해당 산에 대한 출발지가 존재하지 않습니다."));
+    }
+
     public Mountain findMountain(String mountain, String course) {
         return mountainRepository.findByMountainAndCourse(mountain, course)
                 .orElseThrow(() -> new IllegalArgumentException("해당 산에 대한 코스가 존재하지 않습니다."));
     }
+
 }

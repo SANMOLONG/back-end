@@ -39,4 +39,10 @@ public class Mountain {
 
     @Column(nullable = false)
     private String departAd;
+
+    @Column(nullable = false)
+    private double startLatitude;
+
+    @Column(nullable = false)
+    private double startLongitude;
 }
