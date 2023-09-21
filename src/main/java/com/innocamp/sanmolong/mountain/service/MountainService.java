@@ -14,4 +14,9 @@ public class MountainService {
         return mountainRepository.findByMountainAndCourse(mountain, course)
                 .orElseThrow(() -> new IllegalArgumentException("해당 산에 대한 코스가 존재하지 않습니다."));
     }
+    public Mountain findMountainStart(String mountain, String course, String departNm) {
+        return mountainRepository.findByMountainAndCourseAndDepartNm(mountain, course, departNm)
+                .orElseThrow(() -> new IllegalArgumentException("해당 산에 대한 출발지가 존재하지 않습니다."));
+    }
+
 }
