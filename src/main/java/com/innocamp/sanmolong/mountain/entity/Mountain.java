@@ -11,38 +11,5 @@ public class Mountain {
     private Long id;
 
     @Column(nullable = false)
-    private String mountain;
-
-    @Column(nullable = false)
-    private String course;
-
-    @Column(nullable = false)
-    private String courseLevel;
-
-    @Column(nullable = false)
-    private String spendTime;
-
-    @Column(nullable = false)
-    private String coursePhone;
-
-    @Column(nullable = false)
-    private String courseImg;
-
-    @Column(nullable = false)
-    private String coursePic;
-
-    @Column(nullable = false)
-    private String courseDetail;
-
-    @Column(nullable = false)
-    private String departNm;
-
-    @Column(nullable = false)
-    private String departAd;
-
-    @Column(nullable = false)
-    private double startLatitude;
-
-    @Column(nullable = false)
-    private double startLongitude;
+    private String mountainNm;
 }

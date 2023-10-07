@@ -18,17 +18,17 @@ public class MountainController {
     private final MountainService mountainService;
 
     @GetMapping("/mountainInfo")
-    public List<MountainResponseDto> getMountInfo(@RequestParam String mountain) {
-        return mountainService.getMountInfo(mountain);
+    public List<MountainResponseDto> getMountInfo(@RequestParam String mountainNm) {
+        return mountainService.getMountInfo(mountainNm);
     }
 
     @GetMapping("/courseInfo")
-    public CourseResponseDto getCourseInfo(@RequestParam String course) {
-        return mountainService.getCourseInfo(course);
+    public CourseResponseDto getCourseInfo(@RequestParam String courseNm, @RequestParam String departNm) {
+        return mountainService.getCourseInfo(courseNm, departNm);
     }
 
     @GetMapping("/courseInfoForPost")
-    public CourseResponseDto getCourseInfoForPost(@RequestParam String course) {
-        return mountainService.getCourseInfoForPost(course);
+    public CourseResponseDto getCourseInfoForPost(@RequestParam String courseNm, @RequestParam String departNm) {
+        return mountainService.getCourseInfoForPost(courseNm, departNm);
     }
 }
