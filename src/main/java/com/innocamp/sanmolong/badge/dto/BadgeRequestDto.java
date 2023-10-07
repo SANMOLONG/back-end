@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class BadgeRequestDto {
     private String nickname;
-    private String mountain;
-    private String course;
+    private String mountainNm;
+    private String courseNm;
     private double userLatitude;
     private double userLongitude;
     private String departNm;

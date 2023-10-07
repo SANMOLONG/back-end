@@ -28,7 +28,7 @@ public class BadgeResponseDto {
         this.badgePoint = badge.getBadgePoint();
         this.checkBadge = badge.isCheckBadge();
         this.nickname = badge.getUser().getNickname();
-        this.mountain = badge.getMountain().getMountain();
-        this.course = badge.getMountain().getCourse();
+        this.mountain = badge.getDeparture().getCourse().getMountain().getMountainNm();
+        this.course = badge.getDeparture().getCourse().getCourseNm();
     }
 }

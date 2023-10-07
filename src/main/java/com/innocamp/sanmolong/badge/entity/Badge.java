@@ -1,5 +1,7 @@
 package com.innocamp.sanmolong.badge.entity;
 
+import com.innocamp.sanmolong.mountain.entity.Course;
+import com.innocamp.sanmolong.mountain.entity.Departure;
 import com.innocamp.sanmolong.mountain.entity.Mountain;
 import com.innocamp.sanmolong.user.entity.User;
 import jakarta.persistence.*;
@@ -35,8 +37,8 @@ public class Badge{
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "mountain_id")
-    private Mountain mountain;
+    @JoinColumn(name = "departId")
+    private Departure departure;
 
     public void update(boolean checkBadge){
         this.checkBadge = checkBadge;

@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BadgeCountResponseDto {
-    private String mountain;
+    private String mountainNm;
     private int count;
     private String latelyDate;
 }

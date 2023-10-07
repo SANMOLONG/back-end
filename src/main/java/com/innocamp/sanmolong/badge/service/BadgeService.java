@@ -3,7 +3,11 @@ package com.innocamp.sanmolong.badge.service;
 import com.innocamp.sanmolong.badge.dto.*;
 import com.innocamp.sanmolong.badge.entity.Badge;
 import com.innocamp.sanmolong.badge.repository.BadgeRepository;
+import com.innocamp.sanmolong.mountain.entity.Course;
+import com.innocamp.sanmolong.mountain.entity.Departure;
 import com.innocamp.sanmolong.mountain.entity.Mountain;
+import com.innocamp.sanmolong.mountain.repository.CourseRepository;
+import com.innocamp.sanmolong.mountain.repository.DepartureRepository;
 import com.innocamp.sanmolong.mountain.repository.MountainRepository;
 import com.innocamp.sanmolong.mountain.service.MountainService;
 import com.innocamp.sanmolong.user.entity.User;
@@ -25,8 +29,10 @@ import java.util.Optional;
 public class BadgeService {
     private final BadgeRepository badgeRepository;
     private final UserService userService;
-    private final MountainService mountainService;
     private final MountainRepository mountainRepository;
+    private final CourseRepository courseRepository;
+    private final DepartureRepository departureRepository;
+
 
     // 산별 모든 뱃지 가져오기
     public List<BadgeResponseDto> getBadges(BadgeMountainRequestDto requestDto) {
@@ -34,12 +40,14 @@ public class BadgeService {
         String mountainNM = requestDto.getMountain();
 
         User user = userService.findUser(nickname);
-        List<Mountain> mountains = mountainRepository.findAllByMountain(mountainNM);
+        Mountain mountain = mountainRepository.findByMountainNm(mountainNM);
+        List<Course> courses = courseRepository.findAllByMountain(mountain);
+        List<Departure> departures = getDepart(courses);
 
         List<BadgeResponseDto> badges = new ArrayList<>();
-        for(int i = 0; i < mountains.size(); i++) {
-            Mountain mountain = mountains.get(i);
-            Badge badge = badgeRepository.findByUserAndMountain(user, mountain);
+        for(int i = 0; i < departures.size(); i++) {
+            Departure departure = departures.get(i);
+            Badge badge = badgeRepository.findByUserAndDeparture(user, departure);
             BadgeResponseDto badgeResponseDto = new BadgeResponseDto(badge);
             badges.add(badgeResponseDto);
         }
@@ -52,12 +60,14 @@ public class BadgeService {
         String mountainNM = requestDto.getMountain();
 
         User user = userService.findUser(nickname);
-        List<Mountain> mountains = mountainRepository.findDistinctAllByMountain(mountainNM);
+        Mountain mountain = mountainRepository.findByMountainNm(mountainNM);
+        List<Course> courses = courseRepository.findAllByMountain(mountain);
+        List<Departure> departures = getDepart(courses);
 
         List<BadgeResponseDto> badges = new ArrayList<>();
-        for(int i = 0; i < mountains.size(); i++) {
-            Mountain mountain = mountains.get(i);
-            Badge badge = badgeRepository.findByUserAndMountain(user, mountain);
+        for(int i = 0; i < departures.size(); i++) {
+            Departure departure = departures.get(i);
+            Badge badge = badgeRepository.findByUserAndDeparture(user, departure);
             String customLocalDateTimeFormat = badge.getGetDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             if(customLocalDateTimeFormat.equals(LocalDate.now().toString())){
                 BadgeResponseDto badgeResponseDto = new BadgeResponseDto(badge);
@@ -70,7 +80,8 @@ public class BadgeService {
 
     public List<BadgeCountResponseDto> getBadgesCount(String nickname) {
         User user = userService.findUser(nickname);
-        List<Mountain> mountains = mountainRepository.findAll();
+        List<Course> courses = courseRepository.findAll();
+        List<Departure> departures = getDepart(courses);
 
         List<BadgeCountResponseDto> countList = new ArrayList<>();
         countList.add(new BadgeCountResponseDto("설악산", 0, null));
@@ -78,19 +89,19 @@ public class BadgeService {
         countList.add(new BadgeCountResponseDto("오대산", 0, null));
         countList.add(new BadgeCountResponseDto("태백산", 0, null));
 
-        for(int i = 0; i < mountains.size(); i++) {
-            Mountain mountain = mountains.get(i);
-            Badge badge = badgeRepository.findByUserAndMountain(user, mountain);
-            if(badge.isCheckBadge()){
-                for(int j = 0; j < countList.size(); j++){
-                    if(badge.getMountain().getMountain().equals(countList.get(j).getMountain())){
-                        countList.get(j).setCount(countList.get(j).getCount()+1);
+        for(int i = 0; i < departures.size(); i++) {
+            Departure departure = departures.get(i);
+            Badge badge = badgeRepository.findByUserAndDeparture(user, departure);
+            if (badge.isCheckBadge()) {
+                for (int j = 0; j < countList.size(); j++) {
+                    if (badge.getDeparture().getCourse().getMountain().getMountainNm().equals(countList.get(j).getMountainNm())) {
+                        countList.get(j).setCount(countList.get(j).getCount() + 1);
                     }
                 }
             }
         }
         for(int i = 0; i < countList.size(); i++){
-            String latelyDate = getLatelyDate(nickname, countList.get(i).getMountain());
+            String latelyDate = getLatelyDate(nickname, countList.get(i).getMountainNm());
             countList.get(i).setLatelyDate(latelyDate);
         }
 
@@ -100,12 +111,14 @@ public class BadgeService {
     // 유저별 산별 가장 최근 날짜 가져오기
     public String getLatelyDate(String nickname, String mountainNM){
         User user = userService.findUser(nickname);
-        List<Mountain> mountains = mountainRepository.findAllByMountain(mountainNM);
+        Mountain mountain = mountainRepository.findByMountainNm(mountainNM);
+        List<Course> courses = courseRepository.findAllByMountain(mountain);
+        List<Departure> departures = getDepart(courses);
 
-        LocalDateTime initDate = badgeRepository.findByUserAndMountain(user, mountains.get(0)).getGetDate();
-        for(int i = 1; i < mountains.size(); i++) {
-            Mountain mountain = mountains.get(i);
-            Badge badge = badgeRepository.findByUserAndMountain(user, mountain);
+        LocalDateTime initDate = badgeRepository.findByUserAndDeparture(user, departures.get(0)).getGetDate();
+        for(int i = 1; i < departures.size(); i++) {
+            Departure departure = departures.get(i);
+            Badge badge = badgeRepository.findByUserAndDeparture(user, departure);
             if(badge.getGetDate().isAfter(initDate)){
                 initDate = badge.getGetDate();
             }
@@ -115,37 +128,25 @@ public class BadgeService {
 
         return latelyDate;
     }
+
     @Transactional
     public boolean createBadge(BadgeRequestDto requestDto) {
         User user = userService.findUser(requestDto.getNickname());
-        Mountain mountain = mountainService.findMountainStart(requestDto.getMountain(), requestDto.getCourse(), requestDto.getDepartNm());
+//        Mountain mountain = mountainService.findMountainStart(requestDto.getMountain(), requestDto.getCourse(), requestDto.getDepartNm());
+
+        Departure departure = departureRepository.findByDepartNm(requestDto.getDepartNm());
+
         // 사용자 해당 위치 확인
         double distanceKiloMeter = distance(requestDto.getUserLatitude(), requestDto.getUserLongitude(),
-                mountain.getStartLatitude(), mountain.getStartLongitude(),"kilometer");
+                departure.getStartLatitude(), departure.getStartLongitude(),"kilometer");
 
         if(distanceKiloMeter <= 1){
-            Badge badge = badgeRepository.findByUserAndMountain(user, mountain);
+            Badge badge = badgeRepository.findByUserAndDeparture(user, departure);
             badge.update(true);
             return true;
         }else{
             return false;
         }
-    }
-
-    public List<SliderBadgeDto> getSliderBadgeInfo(String nickname) {
-        List<SliderBadgeDto> badgeDtoList = new ArrayList<>();
-        List<String> mounts = Arrays.asList("설악산", "오대산", "치악산", "태백산");
-        for (String mount: mounts) {
-            long count = badgeRepository.countByUser_NicknameAndMountain_MountainAndCheckBadgeTrue(nickname, mount);
-            Optional<Badge> lastBadge = badgeRepository.findFirstByUser_NicknameAndMountain_MountainAndCheckBadgeTrueOrderByGetDateDesc(nickname, mount);
-            String lastDate = "";
-            if (lastBadge.isPresent()) {
-                lastDate = lastBadge.get().getGetDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            }
-
-            badgeDtoList.add(new SliderBadgeDto(mount, count, lastDate));
-        }
-        return badgeDtoList;
     }
 
     /**
@@ -185,5 +186,18 @@ public class BadgeService {
 
     private static double rad2deg(double rad) {
         return (rad * 180 / Math.PI);
+    }
+
+    // 산별 출발지 가져오기
+    public List<Departure> getDepart(List<Course> courses){
+        List<Departure> departures = new ArrayList<>();
+        for(int i = 0; i < courses.size(); i++){
+            Course course = courses.get(i);
+            List<Departure> departureAtCourse = departureRepository.findAllByCourse(course);
+            departureAtCourse.stream().forEach(
+                    departure -> departures.add(departure)
+            );
+        }
+        return departures;
     }
 }
