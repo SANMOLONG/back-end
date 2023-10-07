@@ -1,5 +1,6 @@
 package com.innocamp.sanmolong.api.dto;
 
+import com.innocamp.sanmolong.badge.dto.BadgeCountResponseDto;
 import com.innocamp.sanmolong.badge.dto.SliderBadgeDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +12,6 @@ import java.util.List;
 public class SliderInfoResponseDto {
     List<WeatherDto> weathers;
     List<FireDto> fires;
-    List<SliderBadgeDto> badges;
+    List<BadgeCountResponseDto> badges;
     long plogging;
 }

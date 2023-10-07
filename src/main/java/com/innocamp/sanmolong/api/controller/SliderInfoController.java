@@ -5,6 +5,7 @@ import com.innocamp.sanmolong.api.dto.SliderInfoResponseDto;
 import com.innocamp.sanmolong.api.dto.WeatherDto;
 import com.innocamp.sanmolong.api.explorer.FireApiExplorer;
 import com.innocamp.sanmolong.api.explorer.WeatherApiExplorer;
+import com.innocamp.sanmolong.badge.dto.BadgeCountResponseDto;
 import com.innocamp.sanmolong.badge.dto.SliderBadgeDto;
 import com.innocamp.sanmolong.badge.service.BadgeService;
 import com.innocamp.sanmolong.user.entity.User;
@@ -35,13 +36,13 @@ public class SliderInfoController {
         List<FireDto> fireInfo = fireApiExplorer.getFireInfo();
         List<WeatherDto> weatherInfo = weatherApiExplorer.getWeatherInfo();
         long plogging = 0;
-        List<SliderBadgeDto> badges = null;
+        List<BadgeCountResponseDto> badges = null;
         if (nickname != null) {
             User user = userService.findUser(nickname);
             // 플로깅
             plogging = user.getPoint();
             // 뱃지
-            badges = badgeService.getSliderBadgeInfo(nickname);
+            badges = badgeService.getBadgesCount(nickname);
         }
 
         return new SliderInfoResponseDto(weatherInfo, fireInfo, badges, plogging);
