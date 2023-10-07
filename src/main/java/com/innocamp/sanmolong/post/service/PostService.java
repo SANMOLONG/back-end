@@ -1,6 +1,11 @@
 package com.innocamp.sanmolong.post.service;
 
+import com.innocamp.sanmolong.mountain.entity.Course;
+import com.innocamp.sanmolong.mountain.entity.Departure;
 import com.innocamp.sanmolong.mountain.entity.Mountain;
+import com.innocamp.sanmolong.mountain.repository.CourseRepository;
+import com.innocamp.sanmolong.mountain.repository.DepartureRepository;
+import com.innocamp.sanmolong.mountain.repository.MountainRepository;
 import com.innocamp.sanmolong.mountain.service.MountainService;
 import com.innocamp.sanmolong.post.dto.PostRequestDto;
 import com.innocamp.sanmolong.post.dto.PostResponseDto;
@@ -15,26 +20,39 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final CourseRepository courseRepository;
     private final UserService userService;
+    private final DepartureRepository departureRepository;
+    private final MountainRepository mountainRepository;
     private final MountainService mountainService;
 
     public ResponseEntity<?> createPost(PostRequestDto requestDto) {
         User user = userService.findUser(requestDto.getNickname());
-        Mountain mountain = mountainService.findMountain(requestDto.getMountain(), requestDto.getCourse());
-        Post post = new Post(requestDto, user, mountain);
+        Course course = courseRepository.findByCourseNm(requestDto.getCourseNm());
+        Departure departure = departureRepository.findByDepartNmAndCourse(requestDto.getDepartNm(), course);
+        Post post = new Post(requestDto, user, course, departure);
         postRepository.save(post);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("게시글 생성 성공");
     }
 
-    public TotalPostResponseDto getPosts(String mount, String course) {
-        List<Post> posts = postRepository.findByMountain_MountainAndMountain_Course(mount, course);
+    public TotalPostResponseDto getPosts(String courseNm) {
+        Course course = courseRepository.findByCourseNm(courseNm);
+        List<Departure> departures = departureRepository.findAllByCourse(course);
+        List<Post> posts = new ArrayList<>();
+        for(Departure departure : departures){
+            for(Post post : postRepository.findAllByDeparture(departure)){
+                posts.add(post);
+            }
+        }
+
         return new TotalPostResponseDto(posts);
     }
 

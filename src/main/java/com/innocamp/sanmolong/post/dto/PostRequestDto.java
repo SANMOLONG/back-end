@@ -10,7 +10,8 @@ public class PostRequestDto {
     private String title;
     private String content;
     private String mountain;
-    private String course;
+    private String courseNm;
+    private String departNm;
     private LocalDate mountDate;
     private int headCount;
 }

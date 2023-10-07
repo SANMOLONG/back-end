@@ -20,10 +20,10 @@ public class PostController {
         return postService.createPost(requestDto);
     }
 
-    // 전체 게시글 조회
+    // 코스별 전체 게시글 조회
     @GetMapping
-    public TotalPostResponseDto getPosts(@RequestParam String mount, @RequestParam String course) {
-        return postService.getPosts(mount, course);
+    public TotalPostResponseDto getPosts(@RequestParam String course) {
+        return postService.getPosts(course);
     }
 
     // 게시글 상세 조회

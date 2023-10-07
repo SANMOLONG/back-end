@@ -1,6 +1,8 @@
 package com.innocamp.sanmolong.post.entity;
 
 import com.innocamp.sanmolong.comment.entity.Comment;
+import com.innocamp.sanmolong.mountain.entity.Course;
+import com.innocamp.sanmolong.mountain.entity.Departure;
 import com.innocamp.sanmolong.mountain.entity.Mountain;
 import com.innocamp.sanmolong.post.dto.PostRequestDto;
 import com.innocamp.sanmolong.together.entity.Together;
@@ -37,13 +39,16 @@ public class Post {
     @Column(nullable = false)
     private LocalDate mountDate;
 
+    @Column(nullable = false)
+    private String courseNm;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mountain_id")
-    private Mountain mountain;
+    @JoinColumn(name = "departId")
+    private Departure departure;
 
     @OneToMany(mappedBy = "post")
     @OrderBy("createdAt desc")
@@ -52,14 +57,15 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Together> togethers;
 
-    public Post(PostRequestDto requestDto, User user, Mountain mountain) {
+    public Post(PostRequestDto requestDto, User user, Course course, Departure departure) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.completed = false;
         this.mountDate = requestDto.getMountDate();
         this.headCount = requestDto.getHeadCount();
+        this.departure = departure;
         this.user = user;
-        this.mountain = mountain;
+        this.courseNm = course.getCourseNm();
         this.comments = new ArrayList<>();
         this.togethers = new ArrayList<>();
     }

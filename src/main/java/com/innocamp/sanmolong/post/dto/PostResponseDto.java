@@ -49,12 +49,12 @@ public class PostResponseDto {
                 .stream()
                 .map(CommentResponseDto::new)
                 .toList();
-        this.mountain = post.getMountain().getMountain();
-        this.course = post.getMountain().getCourse();
-        this.level = post.getMountain().getCourseLevel();
-        this.spendTime = post.getMountain().getSpendTime();
-        this.departNM = post.getMountain().getDepartNm();
-        this.departAD = post.getMountain().getDepartAd();
-        this.courseDetail = post.getMountain().getCourseDetail();
+        this.mountain = post.getDeparture().getCourse().getMountain().getMountainNm();
+        this.course = post.getDeparture().getCourse().getCourseNm();
+        this.level = post.getDeparture().getCourse().getCourseLevel();
+        this.spendTime = post.getDeparture().getCourse().getSpendTime();
+        this.departNM = post.getDeparture().getDepartNm();
+        this.departAD = post.getDeparture().getDepartAd();
+        this.courseDetail = post.getDeparture().getCourse().getCourseDetail();
     }
 }
