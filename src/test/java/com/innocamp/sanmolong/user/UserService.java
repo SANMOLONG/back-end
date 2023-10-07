@@ -2,7 +2,9 @@
 //
 //import com.innocamp.sanmolong.badge.entity.Badge;
 //import com.innocamp.sanmolong.badge.repository.BadgeRepository;
+//import com.innocamp.sanmolong.mountain.entity.Departure;
 //import com.innocamp.sanmolong.mountain.entity.Mountain;
+//import com.innocamp.sanmolong.mountain.repository.DepartureRepository;
 //import com.innocamp.sanmolong.mountain.repository.MountainRepository;
 //import com.innocamp.sanmolong.user.entity.User;
 //import com.innocamp.sanmolong.user.repository.UserRepository;
@@ -23,7 +25,7 @@
 //    private UserRepository userRepository;
 //
 //    @Autowired
-//    private MountainRepository mountainRepository;
+//    private DepartureRepository departureRepository;
 //
 //    @Autowired
 //    private BadgeRepository badgeRepository;
@@ -42,13 +44,13 @@
 //    @Test
 //    void createBadge(){
 //        Optional<User> user = userRepository.findByNickname("모롱이");
-//        List<Mountain> mountains = mountainRepository.findAll();
-//        for(int i = 0; i < mountains.size(); i++){
+//        List<Departure> departures = departureRepository.findAll();
+//        for(int i = 0; i < departures.size(); i++){
 //            Badge badge = Badge.builder()
 //                    .getDate(LocalDateTime.now())
 //                    .checkBadge(false)
 //                    .user(user.get())
-//                    .mountain(mountains.get(i))
+//                    .departure(departures.get(i))
 //                    .build();
 //
 //            badgeRepository.save(badge);
